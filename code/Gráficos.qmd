@@ -241,7 +241,29 @@ base.filtrada %>%
 
 ```
 
+
 ```{r}
+
+ssta.ecoreg <- base.filtrada %>%
+  group_by(Ecoregion_Name) %>%
+  summarise(
+    prom.blanq = mean(Percent_Bleaching, na.rm = TRUE),
+    max.ssta = mean(SSTA_Maximum, na.rm = TRUE)
+  ) %>%
+  arrange(desc(max.ssta))
+
+ssta.ecoreg %>% 
+  ggplot(aes(x = max.ssta, y = prom.blanq, label = Ecoregion_Name)) +
+  geom_point(color = "#E53935", size = 3, alpha = 0.8) +
+  geom_smooth(method = "lm", se = TRUE, color = "#1E88E5", linewidth = 1.2) +
+  geom_text(size = 3, hjust = 1.1, vjust = 0.3, color = "gray20") +
+  labs(
+    title = "Relación entre anomalías térmicas (SSTA máxima) y blanqueamiento coralino por ecorregión (2000–2020)",
+    subtitle = "Cada punto representa una ecorregión promedio del Océano Pacífico",
+    x = "Anomalía máxima de temperatura superficial (°C)",
+    y = "Porcentaje promedio de blanqueamiento (%)"
+  ) +
+  theme_minimal()
 
 ```
 
