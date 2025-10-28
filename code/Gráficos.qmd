@@ -20,7 +20,7 @@ download.file(url, destfile = temp.file, mode = "wb")
 
 database <- read_csv(temp.file)
 
-#View(database)
+View(database)
 
 base.filtrada <- database %>%
   select(Site_ID, Latitude_Degrees, Longitude_Degrees, Ocean_Name, Country_Name,
@@ -47,12 +47,27 @@ base.filtrada <- base.filtrada %>%
 
 ```{r}
 
-# Medianas de variables numéricas
-base.filtrada$Distance_to_Shore[is.na(base.filtrada$Distance_to_Shore)] <- median(base.filtrada$Distance_to_Shore, na.rm = TRUE)
-base.filtrada$Percent_Bleaching[is.na(base.filtrada$Percent_Bleaching)] <- median(base.filtrada$Percent_Bleaching, na.rm = TRUE)
+mediana.dist <- median(base.filtrada$Distance_to_Shore, na.rm = TRUE)
+mediana.blanq <- median(base.filtrada$Percent_Bleaching, na.rm = TRUE)
 
-# Variables categóricas
-base.filtrada$Exposure[is.na(base.filtrada$Exposure)] <- "Desconocido"
+base.filtrada %>%
+  mutate(
+    Distance_to_Shore = if_else(is.na(Distance_to_Shore), mediana.dist, Distance_to_Shore),
+    Percent_Bleaching = if_else(is.na(Percent_Bleaching), mediana.blanq, Percent_Bleaching),
+    Exposure = if_else(is.na(Exposure), "Desconocido", Exposure)
+  )
+  
+#Detección de outliers
+base.filtrada %>% 
+  mutate(
+    Q1 = quantile(Distance_to_Shore, 0.25, na.rm = TRUE),
+    Q3 = quantile(Distance_to_Shore, 0.75, na.rm = TRUE),
+    IQR_val = Q3 - Q1,
+    lim.inf = Q1 - 1.5 * IQR_val,
+    lim.sup = Q3 + 1.5 * IQR_val,
+    Distance_to_Shore = if_else(Distance_to_Shore < lim.inf | Distance_to_Shore > lim.sup,
+                                mediana.dist, Distance_to_Shore)
+  )
 
 ```
 
@@ -60,14 +75,17 @@ base.filtrada$Exposure[is.na(base.filtrada$Exposure)] <- "Desconocido"
 # Observación general de los datos.
 
 ```{r}
+
 str(base.filtrada)
+
+head(base.filtrada)
 
 ```
 
 
 # Graficos planteados.
 
-# Ver el cambio en el blanqueamiento durante los ultimos años.
+## Ver el cambio en el blanqueamiento durante los ultimos años.
 
 ```{r}
 
@@ -90,7 +108,7 @@ promedio.anual %>%
 
 ```
 
-# Promedio de los porcentajes de blanqueamiento diferenciados por ecorregión.
+## Promedio de los porcentajes de blanqueamiento diferenciados por ecorregión.
 
 ```{r}
 
@@ -119,7 +137,7 @@ top.ecoreg %>%
   theme(axis.text.x = element_blank())
 
 ```
-# Distribución de registros de blanqueamiento por reino marino
+## Distribución de registros de blanqueamiento por reino marino
 
 ```{r}
 realm.pastel <- base.filtrada %>%
@@ -144,7 +162,7 @@ realm.pastel %>%
   theme_void()
 
 ```
-# Esposición de los arrecifes
+## Esposición de los arrecifes
 
 ```{r}
 exposicion.pastel <- base.filtrada %>%
@@ -168,7 +186,7 @@ exposicion.pastel %>%
   ) +
   theme_void()
 ```
-# Distancia a la orilla en relación con el blanqueamiento
+## Distancia a la orilla en relación con el blanqueamiento
 
 ```{r}
 
@@ -200,6 +218,30 @@ distancia.blanq %>%
     y = "Porcentaje promedio de blanqueamiento (%)"
   ) +
   theme_minimal()
+
+```
+## Temperatura promedio en relación con el blanqueamiento de arrecifes
+```{r}
+
+base.filtrada <- base.filtrada %>%
+  mutate(temp.cel = Temperature_Mean - 273.15)
+
+base.filtrada %>% 
+  ggplot(aes(x = temp.cel, y = Percent_Bleaching)) +
+  stat_density_2d(aes(fill = after_stat(level)), geom = "polygon", alpha = 0.9, color = NA) +
+  scale_fill_viridis_c(option = "magma", direction = -1, name = "Densidad de puntos") +
+  #geom_smooth(method = "lm", color = "deepskyblue", linewidth = 1.2, se = FALSE) +
+  labs(
+    title = "Relación entre la temperatura promedio y el blanqueamiento coralino (2000–2020)",
+    subtitle = "Datos del Océano Pacífico",
+    x = "Temperatura promedio (°C)",
+    y = "Porcentaje de blanqueamiento (%)"
+  ) +
+  theme_minimal()
+
+```
+
+```{r}
 
 ```
 
