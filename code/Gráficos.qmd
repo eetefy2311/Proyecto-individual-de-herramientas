@@ -23,17 +23,14 @@ database <- read_csv(temp.file)
 View(database)
 
 base.filtrada <- database %>%
-  select(Site_ID, Latitude_Degrees, Longitude_Degrees, Ocean_Name, Country_Name,
-  Ecoregion_Name, Realm_Name, Exposure, Distance_to_Shore, Date_Year, Temperature_Mean, 
-  Temperature_Maximum, SSTA_Maximum, TSA_Mean, TSA_Maximum, Turbidity, Cyclone_Frequency, 
-  Windspeed, Percent_Bleaching
+  select(Site_ID, Ocean_Name, Ecoregion_Name, Realm_Name, Exposure, Distance_to_Shore, Date_Year, Temperature_Mean, SSTA_Maximum, TSA_Mean, Turbidity, Cyclone_Frequency, Percent_Bleaching
   ) %>% 
   filter(
     Ocean_Name == "Atlantic", Date_Year >= 2000, Date_Year <= 2020) 
 
 base.filtrada <- base.filtrada %>%
   mutate(across(
-    .cols = c("Percent_Bleaching", "Distance_to_Shore", "Temperature_Mean","Temperature_Maximum", "SSTA_Maximum", "TSA_Mean", "TSA_Maximum", "Windspeed"),
+    .cols = c("Percent_Bleaching", "Distance_to_Shore", "Temperature_Mean", "SSTA_Maximum", "TSA_Mean"),
     .fns = ~ as.numeric(gsub("[^0-9\\.-]", "", .x))
   ))
 
@@ -57,7 +54,6 @@ base.filtrada %>%
     Exposure = if_else(is.na(Exposure), "Desconocido", Exposure)
   )
   
-#Detección de outliers
 base.filtrada %>% 
   mutate(
     Q1 = quantile(Distance_to_Shore, 0.25, na.rm = TRUE),
@@ -267,7 +263,7 @@ ssta.ecoreg %>%
   theme_minimal()
 
 ```
-## 
+## Anomalías de estrés térmico
 ```{r}
 tsa.ecoreg <- base.filtrada %>%
   group_by(Ecoregion_Name) %>%      
