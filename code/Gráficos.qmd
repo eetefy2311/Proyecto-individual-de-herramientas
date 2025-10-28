@@ -3,3 +3,204 @@ title: "Gráficos"
 format: html
 ---
 
+# Primero se filtra la base de datos para dejar solo variables de interés, e incluir las delimitaciones espaciales y temporales correspondientes. 
+
+```{r}
+library(readr)
+
+library(dplyr)
+
+library(ggplot2)
+
+url <- "https://raw.githubusercontent.com/eetefy2311/Data-proyecto-individual/refs/heads/main/global_bleaching_environmental%20(1).csv"
+
+temp.file <- tempfile(fileext = ".csv")
+
+download.file(url, destfile = temp.file, mode = "wb")
+
+database <- read_csv(temp.file)
+
+#View(database)
+
+base.filtrada <- database %>%
+  select(Site_ID, Latitude_Degrees, Longitude_Degrees, Ocean_Name, Country_Name,
+  Ecoregion_Name, Realm_Name, Exposure, Distance_to_Shore, Date_Year, Temperature_Mean, 
+  Temperature_Maximum, SSTA_Maximum, TSA_Mean, TSA_Maximum, Turbidity, Cyclone_Frequency, 
+  Windspeed, Percent_Bleaching
+  ) %>% 
+  filter(
+    Ocean_Name == "Atlantic", Date_Year >= 2000, Date_Year <= 2020) 
+
+base.filtrada <- base.filtrada %>%
+  mutate(across(
+    .cols = c("Percent_Bleaching", "Distance_to_Shore", "Temperature_Mean","Temperature_Maximum", "SSTA_Maximum", "TSA_Mean", "TSA_Maximum", "Windspeed"),
+    .fns = ~ as.numeric(gsub("[^0-9\\.-]", "", .x))
+  ))
+
+#View(base.filtrada)
+
+#str(base.filtrada)
+
+```
+
+# Manejo de datos faltantes y outliers.
+
+```{r}
+
+# Medianas de variables numéricas
+base.filtrada$Distance_to_Shore[is.na(base.filtrada$Distance_to_Shore)] <- median(base.filtrada$Distance_to_Shore, na.rm = TRUE)
+base.filtrada$Percent_Bleaching[is.na(base.filtrada$Percent_Bleaching)] <- median(base.filtrada$Percent_Bleaching, na.rm = TRUE)
+
+# Variables categóricas
+base.filtrada$Exposure[is.na(base.filtrada$Exposure)] <- "Desconocido"
+
+```
+
+
+# Observación general de los datos.
+
+```{r}
+str(base.filtrada)
+
+```
+
+
+# Graficos planteados.
+
+# Ver el cambio en el blanqueamiento durante los ultimos años.
+
+```{r}
+
+promedio.anual <- base.filtrada %>%
+  group_by(Date_Year) %>%
+  summarise(prom.blanq = mean(Percent_Bleaching, na.rm = TRUE))
+
+promedio.anual %>% 
+  ggplot(aes(x = Date_Year, y = prom.blanq)) +
+  geom_line(color = "#0077B6", size = 1.2) +
+  geom_point(color = "#00B4D8", size = 2) +
+  geom_smooth(method = "loess", se = FALSE, color = "#FF6B6B", linetype = "dashed") +
+  scale_x_continuous(breaks = seq(2000, 2020, by = 2)) +
+  labs(
+    title = "Tendencia del blanqueamiento coralino en el Océano Atlántico (2000–2020)",
+    x = "Año",
+    y = "Porcentaje promedio de blanqueamiento (%)"
+  ) +
+  theme_minimal()
+
+```
+
+# Promedio de los porcentajes de blanqueamiento diferenciados por ecorregión.
+
+```{r}
+
+library(RColorBrewer)
+
+top.ecoreg <- base.filtrada %>%
+  filter(!is.na(Ecoregion_Name)) %>%
+  group_by(Ecoregion_Name) %>%
+  filter(n()>30) %>%
+  summarise(prom.blanq = mean(Percent_Bleaching, na.rm = TRUE)) %>% 
+  arrange(desc(prom.blanq)) %>%
+  mutate(Ecoregion_Name = factor(Ecoregion_Name, levels = Ecoregion_Name))
+
+cols <- rev(colorRampPalette(c("#4292C6", "#08306B"))(nrow(top.ecoreg)))
+
+top.ecoreg %>%  
+  ggplot(aes(x = Ecoregion_Name, y = prom.blanq, fill = Ecoregion_Name)) +
+  geom_bar(stat = "identity", show.legend = TRUE, width = 0.7) +
+  scale_fill_manual(values = cols) +  
+  labs(
+    title = "Promedio de blanqueamiento coralino por ecorregión (2000–2020)",
+    x = "Porcentaje promedio de blanqueamiento (%)",
+    y = "Ecorregión"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank())
+
+```
+# Distribución de registros de blanqueamiento por reino marino
+
+```{r}
+realm.pastel <- base.filtrada %>%
+  filter(!is.na(Realm_Name)) %>%
+  group_by(Realm_Name) %>%
+  summarise(cantidad = n()) %>%
+  mutate(porcentaje.pastel = round((cantidad / sum(cantidad)) * 100, 1))
+
+realm.pastel %>% 
+  ggplot(aes(x = "", y = porcentaje.pastel, fill = Realm_Name)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar(theta = "y") +
+  geom_text(aes(label = paste0(porcentaje.pastel, "%")),
+            position = position_stack(vjust = 0.3),
+            color = "black",
+            size = 4) +
+  scale_fill_brewer(palette = "Set2") +
+  labs(
+    title = "Distribución de registros de blanqueamiento por reino marino (2000–2020)",
+    fill = "Reino marino"
+  ) +
+  theme_void()
+
+```
+# Esposición de los arrecifes
+
+```{r}
+exposicion.pastel <- base.filtrada %>%
+  filter(!is.na(Exposure)) %>%
+  group_by(Exposure) %>%
+  summarise(cantidad = n()) %>%
+  mutate(porcentaje.pastel = round((cantidad / sum(cantidad)) * 100, 1))
+
+exposicion.pastel %>% 
+  ggplot(aes(x = "", y = porcentaje.pastel, fill = Exposure)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar(theta = "y") +
+  geom_text(aes(label = paste0(porcentaje.pastel, "%")),
+            position = position_stack(vjust = 0.5),
+            color = "black",
+            size = 4) +
+  scale_fill_brewer(palette = "Pastel1") +
+  labs(
+    title = "Distribución de registros por tipo de exposición (2000–2020)",
+    fill = "Tipo de exposición"
+  ) +
+  theme_void()
+```
+# Distancia a la orilla en relación con el blanqueamiento
+
+```{r}
+
+#Creacion de categorias para mayor claridad
+mediana.dist <- median(base.filtrada$Distance_to_Shore, na.rm = TRUE)
+
+base.filtrada <- base.filtrada %>%
+  mutate(
+    Distance_to_Shore = ifelse(is.na(Distance_to_Shore), mediana.dist, Distance_to_Shore),
+    Distancia.categoria = case_when(
+      Distance_to_Shore <= 1000 ~ "Cercano a la costa (<= 1 km)",
+      Distance_to_Shore > 1000 & Distance_to_Shore <= 10000 ~ "Intermedio (1–10 km)",
+      Distance_to_Shore > 10000 ~ "Mar abierto (> 10 km)"
+    )
+  )
+
+# Promedio de blanqueamiento por categoria
+distancia.blanq <- base.filtrada %>%
+  group_by(Distancia.categoria) %>%
+  summarise(prom.blanq = mean(Percent_Bleaching, na.rm = TRUE))
+
+# Gráfico
+distancia.blanq %>% 
+  ggplot(aes(x = Distancia.categoria, y = prom.blanq, fill = Distancia.categoria)) +
+  geom_bar(stat = "identity", show.legend = FALSE, width = 0.7) +
+  labs(
+    title = "Promedio de blanqueamiento coralino según la distancia a la costa (2000–2020)",
+    x = "Categoría de distancia a la costa",
+    y = "Porcentaje promedio de blanqueamiento (%)"
+  ) +
+  theme_minimal()
+
+```
+
+
