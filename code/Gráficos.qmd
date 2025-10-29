@@ -23,7 +23,7 @@ database <- read_csv(temp.file)
 View(database)
 
 base.filtrada <- database %>%
-  select(Site_ID, Ocean_Name, Ecoregion_Name, Realm_Name, Exposure, Distance_to_Shore, Date_Year, Temperature_Mean, SSTA_Maximum, TSA_Mean, Turbidity, Cyclone_Frequency, Percent_Bleaching
+  select(Site_ID, Latitude_Degrees, Longitude_Degrees, Ocean_Name, Ecoregion_Name, Realm_Name, Exposure, Distance_to_Shore, Date_Year, Temperature_Mean, SSTA_Maximum, TSA_Mean, Turbidity, Cyclone_Frequency, Percent_Bleaching
   ) %>% 
   filter(
     Ocean_Name == "Atlantic", Date_Year >= 2000, Date_Year <= 2020) 
@@ -34,7 +34,7 @@ base.filtrada <- base.filtrada %>%
     .fns = ~ as.numeric(gsub("[^0-9\\.-]", "", .x))
   ))
 
-#View(base.filtrada)
+View(base.filtrada)
 
 #str(base.filtrada)
 
@@ -282,6 +282,54 @@ tsa.ecoreg %>%
     subtitle = "Cada punto representa una ecorregión promedio del Océano Pacífico",
     x = "Anomalía promedio de estrés térmico (°C)",
     y = "Porcentaje promedio de blanqueamiento (%)"
+  ) +
+  theme_minimal()
+
+```
+## Frecuencia de ciclones por ecorregión
+```{r}
+
+library(maps)
+
+map.data <- base.filtrada %>%
+  group_by(Site_ID, Latitude_Degrees, Longitude_Degrees) %>%
+  summarise(
+    prom.blanq = mean(Percent_Bleaching, na.rm = TRUE),
+    freq.ciclones = mean(Cyclone_Frequency, na.rm = TRUE)
+  ) 
+
+world <- map_data("world")
+
+ggplot() +
+  geom_polygon(
+    data = world,
+    aes(x = long, y = lat, group = group),
+    fill = "gray95", color = "gray80", linewidth = 0.3
+  ) +
+  geom_point(
+    data = map_data,
+    aes(
+      x = Longitude_Degrees,
+      y = Latitude_Degrees,
+      color = prom.blanq,
+      size = freq.ciclones
+    ),
+    alpha = 0.8
+  ) +
+  scale_color_viridis_c(
+    option = "magma",
+    direction = -1,
+    name = "Blanqueamiento (%)"
+  ) +
+  scale_size_continuous(
+    range = c(1, 6),
+    name = "Frecuencia de ciclones"
+  ) +
+  coord_fixed(xlim = c(110, -70), ylim = c(-50, 50)) +
+  labs(
+    title = "Distribución del blanqueamiento coralino y frecuencia de ciclones en el Océano Pacífico (2000–2020)",
+    x = "Longitud",
+    y = "Latitud"
   ) +
   theme_minimal()
 
