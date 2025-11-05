@@ -23,14 +23,34 @@ database <- read_csv(temp.file)
 View(database)
 
 base.filtrada <- database %>%
-  select(Site_ID, Latitude_Degrees, Longitude_Degrees, Ocean_Name, Ecoregion_Name, Realm_Name, Exposure, Distance_to_Shore, Date_Year, Temperature_Mean, SSTA_Maximum, TSA_Mean, Turbidity, Cyclone_Frequency, Percent_Bleaching
-  ) %>% 
-  filter(
-    Ocean_Name == "Atlantic", Date_Year >= 2000, Date_Year <= 2020) 
+  select(
+    Site_ID,
+    Latitude_Degrees,
+    Longitude_Degrees,
+    Ocean_Name,
+    Ecoregion_Name,
+    Realm_Name,
+    Exposure,
+    Distance_to_Shore,
+    Date_Year,
+    Temperature_Mean,
+    SSTA_Maximum,
+    TSA_Mean,
+    Turbidity,
+    Cyclone_Frequency,
+    Percent_Bleaching
+  ) %>%
+  filter(Ocean_Name == "Atlantic", Date_Year >= 2000, Date_Year <= 2020) 
 
 base.filtrada <- base.filtrada %>%
   mutate(across(
-    .cols = c("Percent_Bleaching", "Distance_to_Shore", "Temperature_Mean", "SSTA_Maximum", "TSA_Mean"),
+    .cols = c(
+      "Percent_Bleaching",
+      "Distance_to_Shore",
+      "Temperature_Mean",
+      "SSTA_Maximum",
+      "TSA_Mean"
+    ),
     .fns = ~ as.numeric(gsub("[^0-9\\.-]", "", .x))
   ))
 
