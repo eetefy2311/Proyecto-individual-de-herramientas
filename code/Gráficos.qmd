@@ -152,32 +152,6 @@ top.ecoreg %>%
 
 ```
 
-## Distribución de registros de blanqueamiento por reino marino
-
-```{r}
-realm.pastel <- base.filtrada %>%
-  filter(!is.na(Realm_Name)) %>%
-  group_by(Realm_Name) %>%
-  summarise(cantidad = n()) %>%
-  mutate(porcentaje.pastel = round((cantidad / sum(cantidad)) * 100, 1))
-
-realm.pastel %>% 
-  ggplot(aes(x = "", y = porcentaje.pastel, fill = Realm_Name)) +
-  geom_bar(stat = "identity", width = 1, color = "white") +
-  coord_polar(theta = "y") +
-  geom_text(aes(label = paste0(porcentaje.pastel, "%")),
-            position = position_stack(vjust = 0.3),
-            color = "black",
-            size = 4) +
-  scale_fill_brewer(palette = "Set2") +
-  labs(
-    title = "Distribución de registros de blanqueamiento por reino marino (2000–2020)",
-    fill = "Reino marino"
-  ) +
-  theme_void()
-
-```
-
 ## Esposición de los arrecifes
 
 ```{r}
