@@ -3,7 +3,7 @@ title: "Gráficos"
 format: html
 ---
 
-# Primero se filtra la base de datos para dejar solo variables de interés, e incluir las delimitaciones espaciales y temporales correspondientes. 
+# Primero se filtra la base de datos para dejar solo variables de interés, e incluir las delimitaciones espaciales y temporales correspondientes.
 
 ```{r}
 library(readr)
@@ -87,7 +87,6 @@ base.filtrada %>%
 
 ```
 
-
 # Observación general de los datos.
 
 ```{r}
@@ -97,7 +96,6 @@ str(base.filtrada)
 head(base.filtrada)
 
 ```
-
 
 # Graficos planteados.
 
@@ -153,6 +151,7 @@ top.ecoreg %>%
   theme(axis.text.x = element_blank())
 
 ```
+
 ## Distribución de registros de blanqueamiento por reino marino
 
 ```{r}
@@ -178,6 +177,7 @@ realm.pastel %>%
   theme_void()
 
 ```
+
 ## Esposición de los arrecifes
 
 ```{r}
@@ -202,6 +202,7 @@ exposicion.pastel %>%
   ) +
   theme_void()
 ```
+
 ## Distancia a la orilla en relación con el blanqueamiento
 
 ```{r}
@@ -236,7 +237,9 @@ distancia.blanq %>%
   theme_minimal()
 
 ```
+
 ## Temperatura promedio en relación con el blanqueamiento de arrecifes
+
 ```{r}
 
 base.filtrada <- base.filtrada %>%
@@ -283,7 +286,9 @@ ssta.ecoreg %>%
   theme_minimal()
 
 ```
+
 ## Anomalías de estrés térmico
+
 ```{r}
 tsa.ecoreg <- base.filtrada %>%
   group_by(Ecoregion_Name) %>%      
@@ -306,7 +311,9 @@ tsa.ecoreg %>%
   theme_minimal()
 
 ```
+
 ## Frecuencia de ciclones por ecorregión
+
 ```{r}
 
 library(maps)
@@ -355,4 +362,8 @@ ggplot() +
 
 ```
 
+# 
 
+```{r}
+
+```
