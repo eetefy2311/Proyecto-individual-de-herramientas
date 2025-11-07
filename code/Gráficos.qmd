@@ -118,7 +118,11 @@ promedio.anual %>%
     x = "Año",
     y = "Porcentaje promedio de blanqueamiento (%)"
   ) +
-  theme_minimal()
+  theme_minimal() + 
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+    plot.margin = margin(t = 20, r = 20, b = 20, l = 20)
+  )
 
 ```
 
@@ -261,31 +265,6 @@ ssta.ecoreg %>%
 
 ```
 
-## Anomalías de estrés térmico
-
-```{r}
-tsa.ecoreg <- base.filtrada %>%
-  group_by(Ecoregion_Name) %>%      
-  summarise(
-    prom.blanq = mean(Percent_Bleaching, na.rm = TRUE),
-    prom.tsa = mean(TSA_Mean, na.rm = TRUE)
-  ) 
-
-tsa.ecoreg %>% 
-  ggplot(aes(x = prom.tsa, y = prom.blanq, label = Ecoregion_Name)) +
-  geom_point(color = "#E53935", size = 3, alpha = 0.8) +
-  geom_smooth(method = "lm", se = TRUE, color = "#1E88E5", linewidth = 1.2) +
-  geom_text(size = 3, hjust = 1.1, vjust = 0.3, color = "gray20") +
-  labs(
-    title = "Relación entre el estrés térmico promedio (TSA) y el blanqueamiento coralino (2000–2020)",
-    subtitle = "Cada punto representa una ecorregión promedio del Océano Pacífico",
-    x = "Anomalía promedio de estrés térmico (°C)",
-    y = "Porcentaje promedio de blanqueamiento (%)"
-  ) +
-  theme_minimal()
-
-```
-
 ## Frecuencia de ciclones por ecorregión
 
 ```{r}
@@ -336,8 +315,3 @@ ggplot() +
 
 ```
 
-# 
-
-```{r}
-
-```
