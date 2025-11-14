@@ -195,7 +195,7 @@ distancia.blanq %>%
 Análisis
 En cuanto a variables locales, se observa que los registros más altos de blanqueamiento promedio se agrupan en la categoría de distancia a la costa de 1–10 km, mientras que los sitios más abiertos (>10 km) presentan valores menores. Esto apunta a que zonas meso-costeras, donde la renovación de agua podría ser menor que mar abierto pero mayor que ultra-cercana a costa, podrían estar más vulnerables. La exposición mayoritaria de los sitios muestreados a “exposed” (~54 %) también plantea la necesidad de analizar cómo el oleaje, la radiación y la mezcla influyen en el fenómeno.
 
-## Tempratura y anomalías térmicas en relación con el blanqueamiento coralino
+## Temperatura y anomalías térmicas en relación con el blanqueamiento coralino
 ```{r}
 #Temperatura promedio en relación con el blanqueamiento de arrecifes
 base.filtrada <- base.filtrada %>%
