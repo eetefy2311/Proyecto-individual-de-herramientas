@@ -1,0 +1,152 @@
+---
+format: 
+  pdf: 
+    papersize: letter
+    documentclass: article
+    lang: es-CR
+    titlepage: true
+    toc: true
+    toc-title: "Índice"
+    toccolor: "black"
+    fontsize: "11pt"
+    mainfont: "Times New Roman"
+    urlcolor: "blue"
+    number-sections: true
+    margin-left: "2.54cm"
+    margin-right: "2.54cm"
+    margin-top: "2.54cm"
+    margin-bottom: "2.54cm"
+    #include-before-body: "Portada.qmd"
+    header-includes:
+      - \usepackage{setspace}
+      - \AtBeginDocument{\onehalfspacing} 
+      - \usepackage{indentfirst}
+      - \setlength{\parindent}{1.27cm}
+      - \setlength{\parskip}{0em}
+      - \usepackage{hyperref}
+      - \usepackage{hanging} 
+
+editor: 
+  markdown: 
+    wrap: sentence
+---
+
+\newpage
+
+# Introducción
+
+Los arrecifes de coral son ecosistemas marinos altamente diversos y productivos, debido a su extraordinaria biodiversidad (Spalding et al., 2001).
+Estos sistemas están formados principalmente por corales escleractinios (de orden Scleractinia), que en escencia de componen de cnidarios de la subclase Hexacorallia, organismos coloniales cuyas estructuras están hechas de de carbonato de calcio (CaCO3).
+Su funcionamiento depende en gran medida de una relación simbiótica con microalgas unicelulares del género Symbiodinium (comúnmente conocidas como Zooxanthellae, que en latín significa “animales amarillos pequeños”), que viven en los tejidos del coral (Muscatine & Porter, 1977).
+
+A través de la fotosíntesis, las zooxantelas proporcionan al coral la mayor parte de la energía necesaria para su crecimiento y calcificación, mientras que el coral les ofrece un hábitat protegido y nutrientes esenciales, a esto se le llama una relación simbiótica (Baker et al., 2008). Sin embargo, esta simbiosis es altamente sensible a las variaciones ambientales, especialmente al aumento de la temperatura del mar y a las anomalías en temperatura prolongadas (Glynn, 1993).
+
+Cuando el estrés térmico supera un umbral crítico, el coral expulsa o pierde a sus zooxantelas, lo que produce la decoloración o “blanqueamiento” coralino, es decir, su tejido que los recubre se vuelve de cierta forma transparente, dejando expuestos sus esqueletos de carbonato de calcio (Hoegh-Guldberg, 1999). Aunque los corales pueden recuperarse si las condiciones se restablecen rápidamente, los eventos prolongados o recurrentes pueden provocar su muerte masiva como se ha observado en eventos ambientales pasados (Hughes et al., 2018).
+
+El blanqueamiento de los corales se ha convertido en una de las mayores amenazas ambientales para los ecosistemas marinos tropicales a nivel global.
+La combinación de calentamiento oceánico, acidificación, contaminación y eventos extremos está provocando pérdidas significativas en la cobertura coralina y alteraciones irreversibles en las comunidades de arrecifes de coral (Eakin et al., 2019; Donner et al., 2017).
+
+Ahora, algunos años atrás, los ecosisteamos de arrecifes coralinos han enfrentado un aumento sostenido de anomalías térmicas y eventos de estrés ambiental, especialmente en las últimas dos decádas (McClanahan et al., 2020).
+Por tanto, es preciso llevar a cabo una evaluación que perimta el análisis de cuáles son los fenómenos que inciden más en el blanqueamiento de arrecifes de coral, en el Oceáno Atlántico, dado que estos organismos son escenciales para mantener el ecosistema marino.
+
+# Planteamiento del problema
+
+A pesar de que el blanqueamiento ha sido ampliamente documentado en el Pacífico e Índico, el Atlántico tropical y subtropical presenta particularidades ambientales que hacen interesante una evaluación específica.
+
+La influencia de la turbidez, la exposición, la distancia a la costa y la profundidad podría modular la respuesta coralina frente al estrés térmico.
+Además, existen diferencias marcadas entre el Atlántico occidental (Caribe, Brasil) y el oriental (África occidental) en cuanto a circulación oceánica, nutrientes y temperatura.
+
+Comprender cómo estos factores interactúan es esencial para identificar áreas más vulnerables o resilientes y orientar estrategias de manejo y conservación de arrecifes del Atlántico.
+
+# Objetivo general
+
+Analizar los patrones espaciales, temporales y ambientales del blanqueamiento coralino en el Océano Atlántico entre 2000 y 2020, identificando los principales factores ecológicos y oceanográficos asociados con su severidad y prevalencia.
+
+# Objetivos específicos
+
+-   Evaluar la relación entre las anomalías térmicas (SSTA, TSA) y el porcentaje de blanqueamiento coralino en arrecifes atlánticos.
+-   Comparar la severidad del blanqueamiento entre subregiones atlánticas (Caribe, Brasil, África occidental).
+-   Analizar la evolución temporal del blanqueamiento en el período 2000–2020.
+-   Determinar la influencia de variables locales como exposición, profundidad y distancia a la costa en la intensidad del blanqueamiento.
+-   Examinar la relación entre la cobertura coralina y macroalgal y la prevalencia del blanqueamiento.
+-   Explorar el papel de la turbidez y la frecuencia de ciclones como posibles moduladores del fenómeno.
+-   Identificar hotspots de blanqueamiento en el Atlántico mediante análisis espacial.
+
+# Delimitación del tema
+
+## Delimitación temporal
+
+El estudio abarca los años 2000 a 2020, período caracterizado por la ocurrencia de múltiples eventos de blanqueamiento masivo y por la disponibilidad de datos satelitales y ecológicos consistentes, de acuerdo a la base de datos generada por Biological and Chemical Oceanography Data Management Office (BCO-DMO).
+(Version 2) (Woesik & Burkepile, 2022).
+
+## Delimitación espacial
+
+El análisis se restringe al Océano Atlántico, incluyendo tres subregiones principales: Atlántico Occidental Tropical: Mar Caribe, Golfo de México y costas de Brasil.
+Atlántico Central: Bermudas y zonas oceánicas intermedias.
+Atlántico Oriental: costas de África occidental (Cabo Verde, Senegal, Guinea, etc.).
+Las unidades geográficas de referencia serán los Reinos y Ecorregiones Marinas (MEOW) correspondientes a esta cuenca oceánica.
+
+## Delimitación temática
+
+El enfoque se centra en el blanqueamiento coralino como respuesta ecológica a condiciones ambientales, excluyendo otros factores antrópicos como contaminación, pesca o urbanización costera.
+Las variables se agrupan en tres categorías: 
+- **Ambientales:** temperatura media, anomalías térmicas, turbidez, viento y ciclones. 
+- **Ecológicas:** cobertura coralina, macroalgas, tipo de sustrato y profundidad.
+- **Espaciales:** coordenadas, distancia a la costa y exposición.
+
+# Idea de metodología general
+
+-   Integración de datos de las tablas Site_Info_tbl, Sample_Event_tbl, Bleaching_tbl, Cover_tbl y Environmental_tbl.
+-   Filtrado del espacio muestral espacial, por Ocean_Name = “Atlantic Ocean” y temporal por Date_Year entre 2000 y 2020.
+-   Análisis exploratorio de variables ambientales y biológicas por región.
+-   Evaluación temporal de la frecuencia e intensidad del blanqueamiento por año.
+-   Comparación espacial entre subregiones atlánticas para identificar diferencias ecológicas.
+-   Correlación y análisis para determinar los factores que más influyen en el blanqueamiento coralino.
+-   Visualización. mapas y gráficos de las zonas con mayor incidencia de blanqueamiento de arrecifes de coral.
+
+# Justificación
+
+El blanqueamiento coralino representa una de las amenazas ambientales más graves para los ecosistemas marinos tropicales, debido a su capacidad de alterar profundamente la estructura, función y resiliencia de los arrecifes de coral (Hughes et al., 2018).
+Estos ecosistemas sustentan una enorme biodiversidad y proveen servicios ecosistémicos esenciales, incluyendo la protección costera, la pesca artesanal, el turismo y el almacenamiento de carbono, beneficiando directa o indirectamente a las personas en el mundo (Spalding et al., 2001; Moberg & Folke, 1999).
+
+La pérdida o degradación de los arrecifes compromete la estabilidad ecológica y socioeconómica de regiones costeras, especialmente en el Océano Atlántico tropical, donde el turismo marino y la pesca dependen fuertemente de su integridad ecológica (Eakin et al., 2019).
+
+En las últimas décadas, esta región ha registrado un incremento en la frecuencia e intensidad de eventos de blanqueamiento, vinculados al aumento de las anomalías térmicas y la variabilidad climática (Donner et al., 2017; McClanahan et al., 2020).
+Por tanto, el estudio del blanqueamiento en el Océano Atlántico permite identificar patrones espaciales y temporales de vulnerabilidad y resiliencia, ofreciendo información crítica para el diseño de estrategias de gestión adaptativa y conservación marina.
+
+Comprender la relación entre las condiciones ambientales (como temperatura, turbidez o exposición) y las respuestas ecológicas de los corales es fundamental para anticipar los impactos del cambio climático y establecer medidas basadas en evidencia científica.
+
+\newpage
+
+# Referencias {.unnumbered}
+
+\begin{hangparas}{1.27cm}{1}
+
+Baker, A. C., Glynn, P. W., \& Riegl, B. (2008). Climate change and coral reef bleaching: An ecological assessment of long-term impacts, recovery trends and future outlook. \textit{Estuarine, Coastal and Shelf Science}, 80(4), 435–471. \href{https://doi.org/10.1016/j.ecss.2008.09.003}{https://doi.org/10.1016/j.ecss.2008.09.003}
+
+Donner, S. D., Rickbeil, G. J. M., \& Heron, S. F. (2017). A new, high-resolution global mass coral bleaching database. \textit{Nature Climate Change}, 7(11), 839–844. \href{https://doi.org/10.1038/nclimate3377}{https://doi.org/10.1038/nclimate3377}
+
+Eakin, C. M., Sweatman, H. P. A., \& Brainard, R. E. (2019). The 2014–2017 global-scale coral bleaching event: Insights and impacts. \textit{Science}, 365(6459), 977–981. \href{https://doi.org/10.1126/science.aaw9832}{https://doi.org/10.1126/science.aaw9832}
+
+Glynn, P. W. (1993). Coral reef bleaching: Ecological perspectives. \textit{Coral Reefs}, 12(1), 1–17. \href{https://doi.org/10.1007/BF00303779}{https://doi.org/10.1007/BF00303779}
+
+Hoegh-Guldberg, O. (1999). Climate change, coral bleaching and the future of the world’s coral reefs. \textit{Marine and Freshwater Research}, 50(8), 839–866. \href{https://doi.org/10.1071/MF99078}{https://doi.org/10.1071/MF99078}
+
+Hughes, T. P., Kerry, J. T., Álvarez-Noriega, M., Álvarez-Romero, J. G., Anderson, K. D., Baird, A. H., \& Wilson, S. K. (2018). Global warming transforms coral reef assemblages. \textit{Nature}, 556(7702), 492–496. \href{https://doi.org/10.1038/s41586-018-0041-2}{https://doi.org/10.1038/s41586-018-0041-2}
+
+McClanahan, T. R., Darling, E. S., Maina, J. M., Muthiga, N. A., D’agata, S., Leblond, J., \& Weil, E. (2020). Coral community response to climate disturbances. \textit{Marine Ecology Progress Series}, 635, 1–16. \href{https://doi.org/10.3354/meps13207}{https://doi.org/10.3354/meps13207}
+
+Moberg, F., \& Folke, C. (1999). Ecological goods and services of coral reef ecosystems. \textit{Ecological Economics}, 29(2), 215–233. \href{https://doi.org/10.1016/S0921-8009(99)00009-9}{https://doi.org/10.1016/S0921-8009(99)00009-9}
+
+Muscatine, L., \& Porter, J. W. (1977). Reef corals: Mutualistic symbioses adapted to nutrient-poor environments. \textit{BioScience}, 27(7), 454–460. \href{https://doi.org/10.2307/1297526}{https://doi.org/10.2307/1297526}
+
+Spalding, M. D., Ravilious, C., \& Green, E. P. (2001). \textit{World Atlas of Coral Reefs}. University of California Press.
+
+Veron, J. E. N., Devantier, L. M., Turak, E., Green, A. L., Kininmonth, S., Stafford-Smith, M., \& Peterson, N. (2013). Marine Ecoregions of the World: A bioregionalization of coastal and shelf areas. \textit{Science}, 295(5558), 1280–1284. \href{https://doi.org/10.1126/science.1064774}{https://doi.org/10.1126/science.1064774}
+
+Safaie, A., Silbiger, N. J., McClanahan, T. R., Pawlak, G., Barshis, D. J., Hench, J. L., Rogers, J. S., Williams, G. J., \& Davis, K. A. (2018). High frequency temperature variability reduces the risk of coral bleaching. \textit{Nature Communications}, 9(1), 1671. \href{https://doi.org/10.1038/s41467-018-04074-2}{https://doi.org/10.1038/s41467-018-04074-2}
+
+van Woesik, R., \& Burkepile, D. (2022). Bleaching and environmental data for global coral reef sites from 1980–2020. Biological and Chemical Oceanography Data Management Office (BCO-DMO). (Version 2) Version Date 2022-10-14. \href{https://doi.org/10.1038/s41597-022-01121-y}{https://doi.org/10.1038/s41597-022-01121-y}
+
+\end{hangparas}
+
