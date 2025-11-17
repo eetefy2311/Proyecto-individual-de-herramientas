@@ -11,6 +11,8 @@ library(dplyr)
 
 library(ggplot2)
 
+library(tidyr)
+
 url <- "https://raw.githubusercontent.com/eetefy2311/Data-proyecto-individual/refs/heads/main/global_bleaching_environmental%20(1).csv"
 
 temp.file <- tempfile(fileext = ".csv")
@@ -82,11 +84,12 @@ base.filtrada %>%
 ## Tendencia de blanqueamiento de arrecifes de coral de 2000-2020
 
 ```{r}
+library(here)
 promedio.anual <- base.filtrada %>%
   group_by(Date_Year) %>%
   summarise(prom.blanq = mean(Percent_Bleaching, na.rm = TRUE))
 
-promedio.anual %>% 
+plt <- promedio.anual %>% 
   ggplot(aes(x = Date_Year, y = prom.blanq)) +
   geom_line(color = "#0077B6", size = 1.2) +
   geom_point(color = "#00B4D8", size = 2) +
@@ -102,6 +105,8 @@ promedio.anual %>%
     plot.title = element_text(hjust = 0.5, size = 10.3, face = "bold"),
     plot.margin = margin(t = 20, r = 20, b = 20, l = 20)
   )
+
+ggsave(here("res", "blanqueamiento_tiempo.pdf"), plt, width = 6, height = 4)
 ```
 
 
@@ -122,7 +127,7 @@ top.ecoreg <- base.filtrada %>%
 
 cols <- rev(colorRampPalette(c("#4292C6", "#08306B"))(nrow(top.ecoreg)))
 
-top.ecoreg %>%  
+plt1 <- top.ecoreg %>%  
   ggplot(aes(x = Ecoregion_Name, y = prom.blanq, fill = Ecoregion_Name)) +
   geom_bar(stat = "identity", show.legend = TRUE, width = 0.7) +
   scale_fill_manual(values = cols) +  
@@ -133,6 +138,8 @@ top.ecoreg %>%
   ) +
   theme_minimal() +
   theme(axis.text.x = element_blank())
+
+ggsave(here("res", "blanqueamiento_colores.pdf"), plt1, width = 6, height = 4)
 
 ```
 Análisis
@@ -146,7 +153,7 @@ exposicion.pastel <- base.filtrada %>%
   summarise(cantidad = n()) %>%
   mutate(porcentaje.pastel = round((cantidad / sum(cantidad)) * 100, 1))
 
-exposicion.pastel %>% 
+plt2 <- exposicion.pastel %>% 
   ggplot(aes(x = "", y = porcentaje.pastel, fill = Exposure)) +
   geom_bar(stat = "identity", width = 1, color = "white") +
   coord_polar(theta = "y") +
@@ -172,13 +179,14 @@ base.filtrada <- base.filtrada %>%
       Distance_to_Shore > 10000 ~ "Mar abierto (> 10 km)"
     )
   )
+ggsave(here("res", "pastel.pdf"), plt2, width = 6, height = 4)
 
 # Promedio de blanqueamiento por categoria
 distancia.blanq <- base.filtrada %>%
   group_by(Distancia.categoria) %>%
   summarise(prom.blanq = mean(Percent_Bleaching, na.rm = TRUE))
 
-distancia.blanq %>% 
+plt3 <- distancia.blanq %>% 
   ggplot(aes(x = Distancia.categoria, y = prom.blanq, fill = Distancia.categoria)) +
   geom_bar(stat = "identity", show.legend = FALSE, width = 0.7) +
   labs(
@@ -191,6 +199,7 @@ distancia.blanq %>%
     plot.title = element_text(hjust = 0.5, size = 11),
     plot.margin = margin(t = 20, r = 20, b = 20, l = 20)
   )
+ggsave(here("res", "distancia.pdf"), plt3, width = 6, height = 4)
 ```
 Análisis
 En cuanto a variables locales, se observa que los registros más altos de blanqueamiento promedio se agrupan en la categoría de distancia a la costa de 1–10 km, mientras que los sitios más abiertos (>10 km) presentan valores menores. Esto apunta a que zonas meso-costeras, donde la renovación de agua podría ser menor que mar abierto pero mayor que ultra-cercana a costa, podrían estar más vulnerables. La exposición mayoritaria de los sitios muestreados a “exposed” (~54 %) también plantea la necesidad de analizar cómo el oleaje, la radiación y la mezcla influyen en el fenómeno.
@@ -201,7 +210,7 @@ En cuanto a variables locales, se observa que los registros más altos de blanqu
 base.filtrada <- base.filtrada %>%
   mutate(temp.cel = Temperature_Mean - 273.15)
 
-base.filtrada %>% 
+plt4 <- base.filtrada %>% 
   ggplot(aes(x = temp.cel, y = Percent_Bleaching)) +
   stat_density_2d(aes(fill = after_stat(level)), geom = "polygon", alpha = 0.9, color = NA) +
   scale_fill_viridis_c(option = "magma", direction = -1, name = "Densidad de puntos") +
@@ -216,6 +225,8 @@ base.filtrada %>%
     plot.margin = margin(t = 20, r = 20, b = 20, l = 20)
   )
 
+ggsave(here("res", "temp_mapa.pdf"), plt4, width = 6, height = 4)
+
 #Anomalías térmicas por región en relación con el blanqueamiento de los arrecifes
 library(ggrepel)
 ssta.ecoreg <- base.filtrada %>%
@@ -226,7 +237,8 @@ ssta.ecoreg <- base.filtrada %>%
   ) %>%
   arrange(desc(max.ssta))
 
-ggplot(ssta.ecoreg, aes(x = max.ssta, y = prom.blanq, label = Ecoregion_Name)) +
+plt5 <- ssta.ecoreg %>% 
+  ggplot(aes(x = max.ssta, y = prom.blanq, label = Ecoregion_Name)) +
   geom_point(color = "#E53935", size = 3, alpha = 0.8) +
   geom_smooth(method = "lm", se = TRUE, color = "#1E88E5", linewidth = 1) +
   ggrepel::geom_text_repel(size = 3, color = "gray20", max.overlaps = 10) + 
@@ -241,6 +253,8 @@ ggplot(ssta.ecoreg, aes(x = max.ssta, y = prom.blanq, label = Ecoregion_Name)) +
     plot.subtitle = element_text(hjust = 0.5, size = 9, color = "gray30"),
     plot.margin = margin(t = 15, r = 15, b = 15, l = 15)
   )
+
+ggsave(here("res", "anomalias.pdf"), plt5, width = 6, height = 4)
 ```
 
 Análisis
@@ -249,19 +263,15 @@ Desde la perspectiva de los factores ambientales, la relación entre anomalías 
 ## Modelo random forest
 ```{r}
 library(ranger)
-
 set.seed(123)
-
 datos <- base.filtrada %>%
   mutate(Lat.abs = abs(Latitude_Degrees)) %>%
   select(Percent_Bleaching, SSTA_Maximum, Cyclone_Frequency, Lat.abs, Date_Year) %>%
   drop_na()
-
 n <- nrow(datos)
 idx <- sample(seq_len(n), size = floor(0.8 * n))
 train <- datos[idx, ]
 test  <- datos[-idx, ]
-
 rf.mod <- ranger(
   Percent_Bleaching ~ SSTA_Maximum + Cyclone_Frequency + Lat.abs + Date_Year,
   data = train,
@@ -271,14 +281,11 @@ rf.mod <- ranger(
   importance = "permutation",
   seed = 123
 )
-
 pred.test <- predict(rf.mod, data = test)$predictions
-
 rmse <- sqrt(mean((pred.test - test$Percent_Bleaching)^2))
 r2   <- cor(pred.test, test$Percent_Bleaching)^2
 c(RMSE = rmse, R2 = r2)
-
-ggplot(data.frame(obs = test$Percent_Bleaching, pred = pred.test),
+plt6 <- ggplot(data.frame(obs = test$Percent_Bleaching, pred = pred.test),
        aes(x = obs, y = pred)) +
   geom_point(aes(color = pred - obs), size = 2, alpha = 0.8) +
   geom_abline(slope = 1, intercept = 0, color = "blue", linewidth = 2) +
@@ -287,7 +294,7 @@ ggplot(data.frame(obs = test$Percent_Bleaching, pred = pred.test),
   labs(title = "Predicho vs observado (Random Forest)",
        x = "Observado (%)", y = "Predicho (%)") +
   theme_minimal(base_size = 13)
-
+ggsave(here("res", "modelo.pdf"), plt6, width = 6, height = 4)
 ```
 Explicación detallada del modelo
 Durante la etapa de modelado predictivo, se implementó un algoritmo de bosque aleatorio de regresión (Random Forest) utilizando el paquete ranger en R. Este modelo tuvo como propósito estimar el porcentaje de blanqueamiento coralino a partir de variables ambientales y espaciales, con el fin de evaluar la capacidad predictiva de factores oceanográficos simples, como los que se analizaron previamente, y explorar su utilidad para identificar patrones y áreas de alta vulnerabilidad en el Atlántico.

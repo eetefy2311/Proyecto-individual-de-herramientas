@@ -91,9 +91,9 @@ Las unidades espaciales de referencia corresponden a los Reinos y Ecorregiones M
 
 Las variables se agruparon en tres categorías principales:
 
-- **Ambientales**: temperatura media, anomalías térmicas, turbidez, velocidad del viento y frecuencia de ciclones.
+- **Ambientales**: temperatura media, anomalías térmicas.
 
-- **Ecológicas**: cobertura coralina, presencia de macroalgas, tipo de sustrato y profundidad.
+- **Ecológicas**: profundidad.
 
 - **Espaciales**: coordenadas geográficas, distancia a la costa y grado de exposición.
 
